@@ -1,7 +1,9 @@
+import 'dart:async';
+
 import 'package:bonyeza/main_drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+//import 'package:moor_flutter/moor_flutter.dart';
 import 'add_ussd.dart';
 import 'package:provider/provider.dart';
 import 'ussd_list_class.dart';
@@ -9,8 +11,6 @@ import 'datase_helper.dart';
 import 'package:splashscreen/splashscreen.dart';
 import 'constants.dart';
 import 'tabbed_appBar.dart';
-
-
 
 void main() {
   runApp(MaterialApp(
@@ -35,9 +35,9 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return SplashScreen(
-        seconds: 4,
-        backgroundColor: Colors.greenAccent,
-       image: Image.asset('images/splashScreen.jpeg'),
+      seconds: 4,
+      backgroundColor: Colors.greenAccent,
+      image: Image.asset('images/splashScreen.jpeg'),
       loaderColor: Colors.black,
       photoSize: 130.0,
       navigateAfterSeconds: MyAppAfterSplashScreen(),
@@ -45,31 +45,28 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-
 class MyAppAfterSplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return  Provider(
-        create: (_) => AppDatabase(),
-        child: MaterialApp(
-          title: 'Bonyeza',
-          home: BonyezaHome(),
-        ),
-      );
+    return Provider(
+      create: (_) => AppDatabase(),
+      child: MaterialApp(
+        title: 'Bonyeza',
+        home: BonyezaHome(),
+      ),
+    );
   }
 }
 
 class BonyezaHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
     final database = Provider.of<AppDatabase>(context);
-   dynamic safaricom = database.watchSafaricomAllUssds();
-   dynamic airtel = database.watchAirtelAllUssds();
-
+    dynamic safaricom = database.watchSafaricomAllUssds();
+    dynamic airtel = database.watchAirtelAllUssds();
 
     return DefaultTabController(
-      length: choices.length ,
+      length: 5,
       child: Scaffold(
           floatingActionButton: FloatingActionButton(
             backgroundColor: Colors.indigo,
@@ -93,70 +90,42 @@ class BonyezaHome extends StatelessWidget {
           ),
           appBar: AppBar(
 //            bottomOpacity: 0.7,
-            toolbarOpacity: 0.8,
-            elevation: 10.0,
-            backgroundColor: Colors.black87,
-            title: Text('Bonyeza'),
-            actions: [
-              IconButton(
-                icon: Icon(Icons.search),
-                onPressed: () {
-                  showSearch(context: context, delegate: DataSearch());
-                },
-              )
-            ],
+              toolbarOpacity: 0.8,
+              elevation: 10.0,
+              backgroundColor: Colors.black87,
+              title: Text('Bonyeza'),
+              actions: [
+                IconButton(
+                  icon: Icon(Icons.search),
+                  onPressed: () {
+                    showSearch(context: context, delegate: DataSearch());
+                  },
+                )
+              ],
               bottom: PreferredSize(
                 preferredSize: Size.fromHeight(20),
-                child: TabBar(
-                  unselectedLabelColor: Colors.redAccent,
-                  indicatorSize: TabBarIndicatorSize.tab,
-//                labelColor: Colors.black12,
-                  isScrollable: true,
-                  indicator: BoxDecoration(
-                    gradient: LinearGradient(
-                        colors: [Colors.redAccent,Colors.orangeAccent]
-                    ),
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.redAccent,
-                  ),
-
-//              tabs: choices.map<Widget>((Choice choice){
-//                return Tab(
-//                  text: choice.title,
-//                  icon: choice.icon,
-//                );
-//              }).toList(),
-                tabs: [
-                 appbarTab('Safaricom'),
-                  appbarTab('Airtel'),
-                  appbarTab('Telkom'),
-                  appbarTab('Banks'),
-                  appbarTab('Android')
-
-                ],
-                ),
-              )
-          ),
+                child: TabBarWidgetClass(),
+              )),
           drawer: MainDrawer(),
           body: AnimatedContainer(
             duration: Duration(microseconds: 2),
-            curve: Curves.bounceOut,
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Colors.lightBlueAccent,
-                      Colors.teal,
-                      Colors.lightGreen,
+            curve: Curves.easeIn,
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Colors.lightBlueAccent,
+                Colors.teal,
+                Colors.lightGreen,
 //              Colors.lightGreenAccent
-                    ],
-                  )),
+              ],
+            )),
             child: Padding(
               padding: const EdgeInsets.all(14.0),
               child: TabBarView(
                 children: [
-                 UssdListClass(safaricom),
+                  UssdListClass(safaricom),
                   UssdListClass(airtel),
                   UssdListClass(safaricom),
                   UssdListClass(safaricom),
@@ -167,28 +136,6 @@ class BonyezaHome extends StatelessWidget {
           )),
     );
   }
-//  AnimatedContainer buildAnimatedContainer(Widget body) {
-//    return AnimatedContainer(
-////                curve: Curves.easeInCubic,
-//      duration: Duration(milliseconds: 50),
-//      decoration: BoxDecoration(
-//          gradient: LinearGradient(
-//            begin: Alignment.topLeft,
-//            end: Alignment.bottomRight,
-//            colors: [
-//              Colors.lightBlueAccent,
-//              Colors.teal,
-//              Colors.lightGreen,
-////              Colors.lightGreenAccent
-//            ],
-//          )),
-//      //TODO animated container
-//      child: Padding(
-//        padding: const EdgeInsets.all(14.0),
-//        child: body,
-//      ),
-//    );
-//  }
 }
 
 class DataSearch extends SearchDelegate<String> {
@@ -217,7 +164,7 @@ class DataSearch extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return null;
+    return buildSuggestions(context);
 //    return Center(
 //      child: Container(
 //        height: 100.0,
@@ -235,27 +182,37 @@ class DataSearch extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-
     final database = Provider.of<AppDatabase>(context);
     ConstantsClass constantsClass = ConstantsClass(context);
-     return null;
-//    return StreamBuilder<List<Ussd>>(
-//        stream: database.filterStreamUssd(query),
-//        builder: (context, AsyncSnapshot<List<Ussd>> snapshot) {
-//          final ussds = snapshot.data ?? List();
-//          return ListView.builder(
-//            itemCount: ussds.length,
-//            itemBuilder: (BuildContext context, int index) {
-//              final itemTask = ussds[index];
-//              return constantsClass.buildListItem(itemTask, database);
-//          }
-//
-//          );
-//        }
-//
-//    );
+    dynamic result1 = database.filterStreamSafaricomUssd(query);
+    dynamic result2 = database.filterStreamAirtelUssd(query);
 
-
+    return Padding(
+      padding: EdgeInsets.all(8.0),
+      child: DefaultTabController(
+        length: 5,
+        child: Scaffold(
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(30),
+            child: TabBarWidgetClass(),
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TabBarView(
+              children: [
+                UssdListClass(result1),
+                UssdListClass(result2),
+                UssdListClass(result2),
+                UssdListClass(result2),
+                UssdListClass(result2),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+  }
 
 //
 //    final database = Provider.of<AppDatabase>(context);
@@ -263,11 +220,6 @@ class DataSearch extends SearchDelegate<String> {
 //      return await database.filterUssds(query);
 //
 //    }
-//
-//   final suggestionList = query.isEmpty
-//        ? recentSearch
-////         :database.filterUssds(query);
-//        : searchList.where((element) => element.startsWith(query)).toList();
 //
 //    return ListView.builder(
 //        itemCount: searchList.length,
@@ -293,6 +245,3 @@ class DataSearch extends SearchDelegate<String> {
 //            ));
 
 
-  }
-
-}

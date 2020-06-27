@@ -17,6 +17,7 @@ const List<Choice> choices =<Choice>[
   Choice(title: 'Android',icon: Icon(Icons.trip_origin,color: Colors.yellow,)),
 ];
 
+
 Widget appbarTab(String tabTitle){
   return Container(
     height: 35.0,
@@ -29,11 +30,45 @@ Widget appbarTab(String tabTitle){
         alignment: Alignment.center,
         child: Text(tabTitle,
           style: GoogleFonts.tillana(
-            fontSize: 16,
+            fontSize: 17,
            fontWeight: FontWeight.w500,
           ),
         ),
       ),
     ),
   );
+}
+
+
+class TabBarWidgetClass extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    return TabBar(
+      unselectedLabelColor: Colors.deepOrangeAccent,
+      indicatorSize: TabBarIndicatorSize.tab,
+//                labelColor: Colors.black12,
+      isScrollable: true,
+      indicator: BoxDecoration(
+        gradient: LinearGradient(
+            colors: [Colors.red, Colors.orangeAccent]),
+        borderRadius: BorderRadius.circular(20),
+        color: Colors.redAccent,
+      ),
+
+//              tabs: choices.map<Widget>((Choice choice){
+//                return Tab(
+//                  text: choice.title,
+//                  icon: choice.icon,
+//                );
+//              }).toList(),
+      tabs: [
+        appbarTab('Safaricom'),
+        appbarTab('Airtel'),
+        appbarTab('Telkom'),
+        appbarTab('Banks'),
+        appbarTab('Android')
+      ],
+    );
+  }
 }

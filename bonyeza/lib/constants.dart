@@ -20,9 +20,10 @@ class ConstantsClass {
       actionExtentRatio: 0.4,
       secondaryActions: [
         IconSlideAction(
+          foregroundColor: Colors.pink,
           icon: Icons.delete,
           caption: 'DELETE',
-          color: Colors.pink,
+          color: Colors.transparent,
           onTap: () {
             //TODO: use switch
             if(itemTask.runtimeType == SafaricomUssd){

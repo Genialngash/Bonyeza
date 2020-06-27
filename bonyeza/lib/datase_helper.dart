@@ -54,10 +54,6 @@ MigrationStrategy get migration{
 //Safaricom queries
 Future<List<SafaricomUssd>> getAllSafaricomUssds() => select(safaricomUssds).get();
 Stream <List<SafaricomUssd>> watchSafaricomAllUssds()=> select(safaricomUssds).watch();
-Future<List<SafaricomUssd>> filterSafaricomUssds(String value){
- return(select(safaricomUssds)..where((tbl) => tbl.dialNumber.contains(value) | tbl.dialName.contains(value) )).get();
-}
-
 Stream<List<SafaricomUssd>> filterStreamSafaricomUssd(String value){
   return(select(safaricomUssds)..where((tbl) => tbl.dialNumber.contains(value) | tbl.dialName.contains(value) )).watch();
 }
