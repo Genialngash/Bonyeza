@@ -1,4 +1,3 @@
-import 'dart:async';
 
 import 'package:bonyeza/main_drawer.dart';
 import 'package:flutter/cupertino.dart';
@@ -69,10 +68,10 @@ class BonyezaHome extends StatelessWidget {
       length: 5,
       child: Scaffold(
           floatingActionButton: FloatingActionButton(
-            backgroundColor: Colors.indigo,
+            backgroundColor: Colors.black87,
             elevation: 19.0,
             onPressed: () async {
-              final database = Provider.of<AppDatabase>(context);
+              final database = Provider.of<AppDatabase>(context,listen: false);
 
               Dialog dialog = Dialog(
                 shape: RoundedRectangleBorder(
@@ -92,7 +91,7 @@ class BonyezaHome extends StatelessWidget {
 //            bottomOpacity: 0.7,
               toolbarOpacity: 0.8,
               elevation: 10.0,
-              backgroundColor: Colors.black87,
+              backgroundColor:Color(0xff000010),
               title: Text('Bonyeza'),
               actions: [
                 IconButton(
@@ -115,6 +114,7 @@ class BonyezaHome extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
+
                 Colors.lightBlueAccent,
                 Colors.teal,
                 Colors.lightGreen,
