@@ -25,13 +25,28 @@ class ConstantsClass {
           caption: 'DELETE',
           color: Colors.transparent,
           onTap: () {
-            //TODO: use switch
-            if(itemTask.runtimeType == SafaricomUssd){
-              database.deleteSafaricomUssd(itemTask);
+            //TODO: insert other ussd type
+            switch(itemTask.runtimeType){
+              case SafaricomUssd:{
+                database.deleteSafaricomUssd(itemTask);
+              }
+              break;
+              case AirtelUssd:{
+                database.deleteAirtelUssd(itemTask);
+              }
+              break;
+              default:
+                {
+                  return null;
+                }
             }
-            if(itemTask.runtimeType == AirtelUssd){
-              database.deleteAirtelUssd(itemTask);
-            }
+
+//            if(itemTask.runtimeType == SafaricomUssd){
+//              database.deleteSafaricomUssd(itemTask);
+//            }
+//            if(itemTask.runtimeType == AirtelUssd){
+//              database.deleteAirtelUssd(itemTask);
+//            }
             showSnackBar(context, 'DELETED !!');
 
           },
