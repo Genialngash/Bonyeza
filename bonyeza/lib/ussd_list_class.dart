@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:moor_flutter/moor_flutter.dart';
 import 'package:provider/provider.dart';
 import 'datase_helper.dart';
 import 'scroll_event_notifier.dart';
@@ -67,8 +66,4 @@ class UssdListClass extends StatelessWidget{
       },
     );
   }
-
-
-
-
 }

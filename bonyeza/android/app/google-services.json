@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "896396501717",
+    "firebase_url": "https://bonyeza-3d251.firebaseio.com",
+    "project_id": "bonyeza-3d251",
+    "storage_bucket": "bonyeza-3d251.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:896396501717:android:4a3e9e38ec184ca992f85c",
+        "android_client_info": {
+          "package_name": "com.example.bonyeza"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "896396501717-evvjjcv55lnfngog7e53cckre17tq5ud.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBoLzex5RX0EhirECcxgM9jwqGQEuR-Gtk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "896396501717-evvjjcv55lnfngog7e53cckre17tq5ud.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

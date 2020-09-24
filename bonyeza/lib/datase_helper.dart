@@ -1,7 +1,7 @@
-import 'dart:async';
 import 'defaultUssds.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 part 'datase_helper.g.dart';
+
 
 //table Ussds represents safaricom short codes
 
@@ -21,7 +21,29 @@ class AirtelUssds extends Table{
   TextColumn get dialName => text().nullable()();
 }
 
-@UseMoor(tables:[SafaricomUssds,AirtelUssds])
+class TelkomUssds extends Table{
+
+  IntColumn get id => integer().autoIncrement()();// makes it the primary key
+  TextColumn get dialNumber => text().nullable()();
+  TextColumn get dialName => text().nullable()();
+}
+
+class BankUssds extends Table{
+
+  IntColumn get id => integer().autoIncrement()();// makes it the primary key
+  TextColumn get dialNumber => text().nullable()();
+  TextColumn get dialName => text().nullable()();
+}
+class AndroidUssds extends Table{
+
+  IntColumn get id => integer().autoIncrement()();// makes it the primary key
+  TextColumn get dialNumber => text().nullable()();
+  TextColumn get dialName => text().nullable()();
+}
+
+
+
+@UseMoor(tables:[SafaricomUssds,AirtelUssds,TelkomUssds,BankUssds,AndroidUssds])
 class  AppDatabase extends _$AppDatabase {
 
 AppDatabase():super(FlutterQueryExecutor.inDatabaseFolder(path: 'ussdDb.db',logStatements:true,),);
@@ -38,6 +60,15 @@ MigrationStrategy get migration{
     for(var a in defaultAirtel) {
       insertAirtelUssd(a);
     }
+      for(var t in defaultTelkom) {
+        insertTelkomUssd(t);
+      }
+      for(var b in defaultBank) {
+        insertBankUssd(b);
+      }
+      for(var n in defaultAndroid) {
+        insertAndroidUssd(n);
+      }
     })
 //    beforeOpen: (details)async{
 //      await into(ussds).insert(
@@ -50,6 +81,8 @@ MigrationStrategy get migration{
 
   );
 }
+
+
 
 //Safaricom queries
 Future<List<SafaricomUssd>> getAllSafaricomUssds() => select(safaricomUssds).get();
@@ -69,6 +102,32 @@ Future updateSafaricomUssd (SafaricomUssd ussd )=> update(safaricomUssds).replac
   }
   Future<int> insertAirtelUssd(AirtelUssd ussd) => into(airtelUssds).insert(ussd);
   Future deleteAirtelUssd(AirtelUssd ussd)=> delete(airtelUssds).delete(ussd);
+
+
+  //Telkom queries
+  Stream <List<TelkomUssd>> watchTelkomAllUssds()=> select(telkomUssds).watch();
+  Stream<List<TelkomUssd>> filterStreamTelkomUssd(String value){
+    return(select(telkomUssds)..where((tbl) => tbl.dialNumber.contains(value) | tbl.dialName.contains(value) )).watch();
+  }
+  Future<int> insertTelkomUssd(TelkomUssd ussd) => into(telkomUssds).insert(ussd);
+  Future deleteTelkomUssd(TelkomUssd ussd)=> delete(telkomUssds).delete(ussd);
+
+
+  // Bank queries
+  Stream <List<BankUssd>> watchBankAllUssds()=> select(bankUssds).watch();
+  Stream<List<BankUssd>> filterStreamBankUssd(String value){
+    return(select(bankUssds)..where((tbl) => tbl.dialNumber.contains(value) | tbl.dialName.contains(value) )).watch();
+  }
+  Future<int> insertBankUssd(BankUssd ussd) => into(bankUssds).insert(ussd);
+  Future deleteBankUssd(BankUssd ussd)=> delete(bankUssds).delete(ussd);
+
+  // Android queries
+  Stream <List<AndroidUssd>> watchAndroidAllUssds()=> select(androidUssds).watch();
+  Stream<List<AndroidUssd>> filterStreamAndroidUssd(String value){
+    return(select(androidUssds)..where((tbl) => tbl.dialNumber.contains(value) | tbl.dialName.contains(value) )).watch();
+  }
+  Future<int> insertAndroidUssd(AndroidUssd ussd) => into(androidUssds).insert(ussd);
+  Future deleteAndroidUssd(AndroidUssd ussd)=> delete(androidUssds).delete(ussd);
 }
 
 

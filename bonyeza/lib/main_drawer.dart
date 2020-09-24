@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'contact_us_dialog.dart';
+import 'about_bonyeza_dialog.dart';
 
 class MainDrawer extends StatelessWidget {
   @override
@@ -7,11 +9,11 @@ class MainDrawer extends StatelessWidget {
     return SafeArea(
       child: Drawer(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
               width: double.infinity, //stretches out to its parent widget
-              padding: EdgeInsets.all(20),
+              padding: EdgeInsets.symmetric(vertical: 10.0),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
                       bottomRight: Radius.circular(10.0),
@@ -34,13 +36,14 @@ class MainDrawer extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'danche ngash',
+                      'BONYEZA APP.',
                       style: TextStyle(
                         fontSize: 22,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      'danchengash@gmail.com',
+                      'Dial and add ussds easily',
                       style: TextStyle(
                         fontSize: 22,
                       ),
@@ -49,12 +52,45 @@ class MainDrawer extends StatelessWidget {
                 ),
               ),
             ),
-            drawerListTile(Icon(Icons.home), 'Home', () => Navigator.of(context).pop()),
-            drawerListTile(Icon(Icons.share), 'Share app', () {}),
-            drawerListTile(Icon(Icons.contact_mail), 'Contact us', () {}),
-            drawerListTile(Icon(Icons.star_border), 'Give 5 stars', () {}),
-            drawerListTile(Icon(Icons.lightbulb_outline), 'Change theme', () {}),
-            SizedBox(height: 12.0,)
+            SizedBox(
+              height: 10.0,
+            ),
+            drawerListTile(
+                Icon(Icons.home), 'Home', () => Navigator.of(context).pop()),
+            drawerListTile(Icon(Icons.share), 'Share app', () {
+              return showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    String message = '  https://www.apkfiles.com/apk-604226/bonyeza  '
+                        '    or https://www.apkfiles.com/apk-604228/bonyeza-arm32-8mb';
+                    return aboutBonyeza(context, message);
+                  });
+            }),
+            drawerListTile(
+                Icon(Icons.contact_mail),
+                'Contact us',
+                () => showDialog(
+                    context: context,
+                    builder: (BuildContext context) => contactUs(
+                        context))), // => Navigator.push(context, MaterialPageRoute(builder: (context)=>ContactUs()))
+            drawerListTile(Icon(Icons.star_border), 'Rate 5 stars',
+                () {}),
+            drawerListTile(
+              Icon(Icons.android),
+              'About Bonyeza',
+              () => showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    String message = '''
+       Unstructured Supplementary Service Data (USSD),  is a communications protocol used by GSM cellular telephones to  communicate with the mobile network operator's computers.
+       USSD can be used for WAP browsing, prepaid callback service, mobile-money services,menu-based information services.
+               
+       Bonyeza is an app that helps you to dial the USSD easily by just tapping on the respective digits
+         You dont have to always recall all the USSD codes with Bonyeza in your phone.
+              ''';
+                    return aboutBonyeza(context, message);
+                  }),
+            )
           ],
         ),
       ),

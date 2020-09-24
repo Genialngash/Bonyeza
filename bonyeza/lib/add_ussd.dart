@@ -1,11 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:provider/provider.dart';
+
 import 'datase_helper.dart';
-import 'ussd_list_class.dart';
-import 'constants.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 
 String newDialNumber;
 String newDialName;
@@ -21,8 +19,33 @@ class AddUssd extends StatefulWidget {
 }
 
 class _AddUssdState extends State<AddUssd> {
+
+//  //interstitial ad
+//  InterstitialAd _interstitialAd;
+//  bool _isInterstitialAdReady;
+//  void _loadInterstitialAd() {
+//    _interstitialAd.load();
+//  }
+
+//  void _onInterstitialAdEvent(MobileAdEvent event) {
+//    switch (event) {
+//      case MobileAdEvent.loaded:
+//        _isInterstitialAdReady = true;
+//        break;
+//      case MobileAdEvent.failedToLoad:
+//        _isInterstitialAdReady = false;
+//        print('Failed to load an interstitial ad');
+//        break;
+//      case MobileAdEvent.closed:
+//       Navigator.of(context).pop();
+//        break;
+//      default:
+//      // do nothing
+//    }
+//  }
+
   List<bool> _isSelected = [false,false,false,false];
-  TextStyle toggleButtonsStyle =  TextStyle(fontWeight: FontWeight.w500);  //TODO use googleFonts
+  TextStyle toggleButtonsStyle =  TextStyle(fontWeight: FontWeight.w500);
   TextEditingController controllerDialNumber;
   TextEditingController controllerDialName;
   AppDatabase database;
@@ -31,6 +54,13 @@ class _AddUssdState extends State<AddUssd> {
   @override
   void initState() {
     super.initState();
+//    _loadInterstitialAd();
+//    _isInterstitialAdReady = false;
+//    _interstitialAd = InterstitialAd(
+//      adUnitId: AdManager.interstitialAdUnitId,
+//      listener: _onInterstitialAdEvent,
+//    );
+
     controllerDialNumber = TextEditingController();
     controllerDialName = TextEditingController();
   }
@@ -102,12 +132,16 @@ class _AddUssdState extends State<AddUssd> {
             ),
             RaisedButton(
                 elevation: 17.0,
-                color: Colors.black87,
+                color: Colors.blueAccent,
 //            color: Color(0xff02020D),
-                hoverColor: Colors.indigo,
+                hoverColor: Colors.greenAccent,
                 onPressed:()async{
+
                   SafaricomUssd safaricomUssd =SafaricomUssd(id: null, dialNumber: newDialNumber,dialName: newDialName);
                   AirtelUssd airtelUssd = AirtelUssd(id: null,dialNumber: newDialNumber,dialName: newDialName);
+                  TelkomUssd telkomUssd = TelkomUssd(id: null,dialNumber: newDialNumber,dialName: newDialName);
+                  BankUssd bankUssd = BankUssd(id: null,dialNumber: newDialNumber,dialName: newDialName);
+
 
                   if(_isSelected[0 ]== true){
                     database.insertSafaricomUssd(safaricomUssd);
@@ -116,13 +150,23 @@ class _AddUssdState extends State<AddUssd> {
                     database.insertAirtelUssd(airtelUssd);
                   }
                   if(_isSelected[2 ]== true){
-                    print('add to telkom');
-
+                    database.insertTelkomUssd(telkomUssd);
                   }
                   if(_isSelected[3]== true){
-                    print('add to banks');
-
+                    database.insertBankUssd(bankUssd);
                   }
+
+//                  _loadInterstitialAd();
+//                  _isInterstitialAdReady = false;
+//                  _interstitialAd = InterstitialAd(
+//                    adUnitId: AdManager.interstitialAdUnitId,
+//                    listener: _onInterstitialAdEvent,
+//                  );
+//
+//                  if (_isInterstitialAdReady) {
+//                    _interstitialAd.show();
+//                  }
+
                   resetValuesAfterSubmit();
                   Navigator.pop(context);
                 },

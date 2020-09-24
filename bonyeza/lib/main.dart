@@ -1,16 +1,15 @@
 
-import 'package:bonyeza/main_drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-//import 'package:moor_flutter/moor_flutter.dart';
+import 'ad_manager.dart';
+import 'main_drawer.dart';
 import 'add_ussd.dart';
 import 'package:provider/provider.dart';
 import 'ussd_list_class.dart';
 import 'datase_helper.dart';
 import 'package:splashscreen/splashscreen.dart';
-import 'constants.dart';
 import 'tabbed_appBar.dart';
-
+import 'package:firebase_admob/firebase_admob.dart';
 void main() {
   runApp(MaterialApp(
     home: MyApp(),
@@ -26,6 +25,7 @@ void main() {
 //}
 
 class MyApp extends StatefulWidget {
+
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -34,17 +34,25 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return SplashScreen(
-      seconds: 4,
-      backgroundColor: Colors.greenAccent,
-      image: Image.asset('images/splashScreen.jpeg'),
+      seconds: 1,
+      backgroundColor: Colors.white,
+      image: Image.asset('images/BONYEZA_LAUNCH.png'),
       loaderColor: Colors.black,
-      photoSize: 130.0,
+      photoSize: 150.0,
+      loadingText: Text('Loading...'),
       navigateAfterSeconds: MyAppAfterSplashScreen(),
     );
   }
 }
 
 class MyAppAfterSplashScreen extends StatelessWidget {
+  Future<void> _initAdMob() {
+    return FirebaseAdMob.instance.initialize(appId: AdManager.appId);
+  }
+  @override
+  void initState(){
+    _initAdMob();
+  }
   @override
   Widget build(BuildContext context) {
     return Provider(
@@ -57,12 +65,52 @@ class MyAppAfterSplashScreen extends StatelessWidget {
   }
 }
 
-class BonyezaHome extends StatelessWidget {
+class BonyezaHome extends StatefulWidget {
+  @override
+  _BonyezaHomeState createState() => _BonyezaHomeState();
+}
+
+class _BonyezaHomeState extends State<BonyezaHome> {
+  BannerAd _bannerAd;
+  InterstitialAd _interstitialAd;
+  void _loadBannerAd() {
+    _bannerAd
+      ..load()
+      ..show(anchorType: AnchorType.bottom);
+  }
+  void _loadInterstitialAd(){
+     _interstitialAd
+       ..load()
+       ..show();
+  }
+@override
+  void initState() {
+  _bannerAd = BannerAd(
+    adUnitId: AdManager.bannerAdUnitId,
+    size: AdSize.banner,
+    );
+  _interstitialAd = InterstitialAd(
+    adUnitId: AdManager.interstitialAdUnitId,
+
+  );
+    _loadBannerAd();
+   _loadInterstitialAd();
+  }
+  @override
+  void dispose() {
+    _bannerAd?.dispose();
+    _interstitialAd?.dispose();
+  }
   @override
   Widget build(BuildContext context) {
+
     final database = Provider.of<AppDatabase>(context);
+
     dynamic safaricom = database.watchSafaricomAllUssds();
     dynamic airtel = database.watchAirtelAllUssds();
+    dynamic telkom = database.watchTelkomAllUssds();
+    dynamic banks = database.watchBankAllUssds();
+    dynamic android = database.watchAndroidAllUssds();
 
     return DefaultTabController(
       length: 5,
@@ -72,6 +120,24 @@ class BonyezaHome extends StatelessWidget {
             elevation: 19.0,
             onPressed: () async {
               final database = Provider.of<AppDatabase>(context,listen: false);
+
+              FirebaseAdMob.instance.initialize(appId: AdManager.appId);
+              BannerAd _bannerAd;
+              InterstitialAd _interstitialAd;
+              _bannerAd = BannerAd(
+                adUnitId: AdManager.bannerAdUnitId,
+                size: AdSize.banner,
+              );
+              _bannerAd
+                ..load()
+                ..show(anchorType: AnchorType.bottom);
+              _interstitialAd = InterstitialAd(
+               adUnitId: AdManager.interstitialAdUnitId,
+
+              );
+              _interstitialAd
+                 ..load()
+                 ..show();
 
               Dialog dialog = Dialog(
                 shape: RoundedRectangleBorder(
@@ -88,14 +154,14 @@ class BonyezaHome extends StatelessWidget {
             ),
           ),
           appBar: AppBar(
-//            bottomOpacity: 0.7,
+            bottomOpacity: 0.7,
               toolbarOpacity: 0.8,
               elevation: 10.0,
               backgroundColor:Color(0xff000010),
               title: Text('Bonyeza'),
               actions: [
                 IconButton(
-                  icon: Icon(Icons.search),
+                  icon: Icon(Icons.search,),
                   onPressed: () {
                     showSearch(context: context, delegate: DataSearch());
                   },
@@ -114,7 +180,6 @@ class BonyezaHome extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-
                 Colors.lightBlueAccent,
                 Colors.teal,
                 Colors.lightGreen,
@@ -127,9 +192,9 @@ class BonyezaHome extends StatelessWidget {
                 children: [
                   UssdListClass(safaricom),
                   UssdListClass(airtel),
-                  UssdListClass(safaricom),
-                  UssdListClass(safaricom),
-                  UssdListClass(safaricom),
+                  UssdListClass(telkom),
+                  UssdListClass(banks),
+                  UssdListClass(android),
                 ],
               ),
             ),
@@ -183,9 +248,12 @@ class DataSearch extends SearchDelegate<String> {
   @override
   Widget buildSuggestions(BuildContext context) {
     final database = Provider.of<AppDatabase>(context);
-    ConstantsClass constantsClass = ConstantsClass(context);
-    dynamic result1 = database.filterStreamSafaricomUssd(query);
-    dynamic result2 = database.filterStreamAirtelUssd(query);
+
+    dynamic filterSafaricom = database.filterStreamSafaricomUssd(query);
+    dynamic filterAirtel = database.filterStreamAirtelUssd(query);
+    dynamic filterTelkom = database.filterStreamTelkomUssd(query);
+    dynamic filterBank = database.filterStreamBankUssd(query);
+    dynamic filterAndroid = database.filterStreamAndroidUssd(query);
 
     return Padding(
       padding: EdgeInsets.all(8.0),
@@ -200,11 +268,11 @@ class DataSearch extends SearchDelegate<String> {
             padding: const EdgeInsets.all(8.0),
             child: TabBarView(
               children: [
-                UssdListClass(result1),
-                UssdListClass(result2),
-                UssdListClass(result2),
-                UssdListClass(result2),
-                UssdListClass(result2),
+                UssdListClass(filterSafaricom),
+                UssdListClass(filterAirtel),
+                UssdListClass(filterTelkom),
+                UssdListClass(filterBank),
+                UssdListClass(filterAndroid),
               ],
             ),
           ),

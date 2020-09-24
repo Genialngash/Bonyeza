@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -25,7 +26,6 @@ class ConstantsClass {
           caption: 'DELETE',
           color: Colors.transparent,
           onTap: () {
-            //TODO: insert other ussd type
             switch(itemTask.runtimeType){
               case SafaricomUssd:{
                 database.deleteSafaricomUssd(itemTask);
@@ -35,18 +35,25 @@ class ConstantsClass {
                 database.deleteAirtelUssd(itemTask);
               }
               break;
+              case TelkomUssd:{
+                database.deleteTelkomUssd(itemTask);
+              }
+              break;
+              case BankUssd:{
+                database.deleteBankUssd(itemTask);
+
+              }
+              break;
+              case AndroidUssd:{
+                database.deleteAndroidUssd(itemTask);
+              }
+              break;
               default:
                 {
                   return null;
                 }
             }
 
-//            if(itemTask.runtimeType == SafaricomUssd){
-//              database.deleteSafaricomUssd(itemTask);
-//            }
-//            if(itemTask.runtimeType == AirtelUssd){
-//              database.deleteAirtelUssd(itemTask);
-//            }
             showSnackBar(context, 'DELETED !!');
 
           },
@@ -80,8 +87,8 @@ class ConstantsClass {
       ),
       onTap: () {
         String message = 'Dial Number copied to clipBoard';
-        showSnackBar(context, message);
         Clipboard.setData(ClipboardData(text: itemTask.dialNumber));
+        showSnackBar(context, message);
       },
     );
   }
@@ -102,7 +109,8 @@ class ConstantsClass {
       ..setAction(android_action.Action.ACTION_CALL)
       ..setData(Uri(scheme: "tel", path: itemTask.dialNumber))
       ..startActivity().catchError(
-              (e) => showSnackBar(context, 'Could not Place the call'));
+              (e) => showSnackBar(context, 'Could not Place the call'
+                  'Navigate to your Phone\'s Settings > Apps permissions > Phone > Allow Bonyeza' ));
   }
 
 }
