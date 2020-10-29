@@ -61,8 +61,8 @@ class MainDrawer extends StatelessWidget {
               return showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    String message = '  https://www.apkfiles.com/apk-604226/bonyeza  '
-                        '    or https://www.apkfiles.com/apk-604228/bonyeza-arm32-8mb';
+                    String message = ' https://play.google.com/store/apps/ '
+                        ' or  https://www.apkfiles.com/apk-604226/bonyeza  ';
                     return aboutBonyeza(context, message);
                   });
             }),

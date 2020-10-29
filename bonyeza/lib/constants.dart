@@ -110,7 +110,7 @@ class ConstantsClass {
       ..setData(Uri(scheme: "tel", path: itemTask.dialNumber))
       ..startActivity().catchError(
               (e) => showSnackBar(context, 'Could not Place the call'
-                  'Navigate to your Phone\'s Settings > Apps permissions > Phone > Allow Bonyeza' ));
+                  ' Navigate to your Phone\'s Settings > Apps permissions > Phone > Allow Bonyeza' ));
   }
 
 }
