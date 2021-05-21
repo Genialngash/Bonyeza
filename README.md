@@ -4,6 +4,6 @@ Bonyeza is my first Flutter application that allows users to directly dial Ussds
 
 The Ussds are from major Telecom companies in Kenya ,banks and android.
 
-The app uses android intents to directly make the app
+The app uses android intents to directly make calls
 
 #Amaving UI with flutter
